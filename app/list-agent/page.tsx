@@ -18,6 +18,12 @@ export default function CreateAgentPage() {
       throw new Error("You must be logged in to deploy an agent.")
     }
 
+    // FIX: Grab the price input and ensure it has a $ sign if it starts with a number
+    let rawPrice = formData.get('price_structure')?.toString() || ''
+    if (/^\d/.test(rawPrice)) {
+      rawPrice = `$${rawPrice}`
+    }
+
     const newAgent = {
       creator_id: userId,
       name: formData.get('name'),
@@ -40,7 +46,7 @@ export default function CreateAgentPage() {
       has_attribution: formData.get('has_attribution') === 'on',
       has_hitl: formData.get('has_hitl') === 'on',
       pricing_model: formData.get('pricing_model'),
-      price_structure: formData.get('price_structure'),
+      price_structure: rawPrice, // <-- Using the formatted price here!
       has_refund_guarantee: formData.get('has_refund_guarantee') === 'on',
       endpoint_url: formData.get('endpoint_url'),
       auth_method: formData.get('auth_method'),
@@ -150,7 +156,6 @@ export default function CreateAgentPage() {
             <input type="text" name="toolbox" placeholder="e.g., Playwright, WolframAlpha, Python Interpreter" className="w-full px-4 py-3 bg-zinc-50/50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-blue-500 transition-all text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600" />
           </div>
 
-          {/* UNIFIED BLUE RADIO BUTTONS */}
           <div>
             <label className="block text-xs font-bold text-zinc-900 dark:text-white mb-3">Knowledge Access</label>
             <div className="grid grid-cols-2 gap-3">
@@ -221,7 +226,6 @@ export default function CreateAgentPage() {
             </div>
           </div>
 
-          {/* UNIFIED BLUE RADIO BUTTONS */}
           <div>
             <label className="block text-xs font-bold text-zinc-900 dark:text-white mb-3">Statefulness</label>
             <div className="grid grid-cols-2 gap-3">
@@ -257,7 +261,6 @@ export default function CreateAgentPage() {
             </select>
           </div>
 
-          {/* UNIFIED BLUE CHECKBOXES */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <label className="flex items-center gap-3 p-3 border border-zinc-200 dark:border-zinc-700 rounded-xl bg-zinc-50/50 dark:bg-zinc-900 cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
               <input type="checkbox" name="has_soc2" className="w-4 h-4 text-blue-600 dark:text-blue-500 border-zinc-300 dark:border-zinc-600 rounded focus:ring-blue-600 dark:focus:ring-blue-500 dark:bg-zinc-800" />
@@ -296,7 +299,6 @@ export default function CreateAgentPage() {
             </div>
           </div>
 
-          {/* UNIFIED BLUE CHECKBOX */}
           <label className="flex items-start gap-3 p-4 border border-zinc-200 dark:border-zinc-700 rounded-xl bg-zinc-50/50 dark:bg-zinc-900 cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
             <input type="checkbox" name="has_refund_guarantee" className="w-5 h-5 mt-0.5 text-blue-600 dark:text-blue-500 border-zinc-300 dark:border-zinc-600 rounded focus:ring-blue-600 dark:focus:ring-blue-500 dark:bg-zinc-800" defaultChecked />
             <div>

@@ -8,6 +8,7 @@ import {
   Sparkles, CheckCircle2, Gift, Code, 
   ArrowRight, Mail, Rocket, ArrowLeft, Copy
 } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion' // Added Framer Motion!
 
 function WaitlistContent() {
   const searchParams = useSearchParams()
@@ -54,100 +55,116 @@ function WaitlistContent() {
     <div className="max-w-5xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 items-center min-h-[80vh]">
       
       {/* LEFT: Premium Floating Form & Success State */}
-      <div className="bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 p-8 sm:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-3xl transition-colors duration-300">
+      <div className="bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 p-8 sm:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-3xl transition-colors duration-300 overflow-hidden relative">
         
-        {status === 'success' ? (
-          
-          /* --- SUCCESS & REFERRAL DASHBOARD --- */
-          <div className="text-center animate-in zoom-in-95 duration-300">
-            <div className="w-16 h-16 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-100 dark:border-emerald-500/20 shadow-sm">
-              <CheckCircle2 size={32} />
-            </div>
-            <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-2">You're on the list!</h2>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-8">We've reserved your spot. Want to jump the line and unlock early perks?</p>
+        {/* AnimatePresence handles the smooth entrance and exit of components */}
+        <AnimatePresence mode="wait">
+          {status === 'success' ? (
             
-            {/* The Dedicated Referral Box */}
-            <div className="bg-blue-50/50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20 rounded-2xl p-5 mb-6 text-left relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
-              <label className="block text-xs font-bold text-blue-900 dark:text-blue-300 mb-1">Share Your Unique Link</label>
-              <p className="text-[11px] text-blue-700/80 dark:text-blue-400/80 mb-3">Copy this link and share it with friends to climb the leaderboard.</p>
+            /* --- SUCCESS & REFERRAL DASHBOARD --- */
+            <motion.div 
+              key="success"
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: -10 }}
+              transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+              className="text-center"
+            >
+              <div className="w-16 h-16 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-100 dark:border-emerald-500/20 shadow-sm">
+                <CheckCircle2 size={32} />
+              </div>
+              <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-2">You're on the list!</h2>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-8">We've reserved your spot. Want to jump the line and unlock early perks?</p>
               
-              <div className="flex items-center gap-2">
-                <input 
-                  type="text" 
-                  readOnly 
-                  value={myReferralLink} 
-                  className="w-full bg-white dark:bg-zinc-950 border border-blue-200 dark:border-blue-500/30 rounded-xl px-3 py-3 text-sm text-zinc-700 dark:text-zinc-300 font-mono focus:outline-none shadow-sm"
-                />
-                <button 
-                  onClick={copyToClipboard}
-                  className={`px-5 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-2 shrink-0 shadow-sm ${copied ? 'bg-emerald-500 text-white border border-emerald-600' : 'bg-blue-600 text-white border border-blue-700 hover:bg-blue-700'}`}
-                >
-                  {copied ? <CheckCircle2 size={16} /> : <Copy size={16} />}
-                  {copied ? 'Copied!' : 'Copy'}
-                </button>
-              </div>
-            </div>
-
-            <button onClick={() => { setStatus('idle'); setEmail(''); }} className="text-xs font-bold text-zinc-400 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors">
-              &larr; Join with another email
-            </button>
-          </div>
-
-        ) : (
-
-          /* --- WAITLIST FORM --- */
-          <>
-            <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-2 tracking-tight flex items-center gap-2">
-              <Rocket className="text-blue-600 dark:text-blue-400" size={24} /> Join the Waitlist
-            </h2>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-8 leading-relaxed">Be among the first to access the platform. Early members get priority access & perks.</p>
-            
-            <form onSubmit={handleJoinWaitlist} className="space-y-6">
-              <div>
-                <label className="block text-xs font-bold text-zinc-900 dark:text-white mb-2">Work Email <span className="text-red-500">*</span></label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Mail size={16} className="text-zinc-400 dark:text-zinc-500" />
-                  </div>
+              <div className="bg-blue-50/50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20 rounded-2xl p-5 mb-6 text-left relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+                <label className="block text-xs font-bold text-blue-900 dark:text-blue-300 mb-1">Share Your Unique Link</label>
+                <p className="text-[11px] text-blue-700/80 dark:text-blue-400/80 mb-3">Copy this link and share it with friends to climb the leaderboard.</p>
+                
+                <div className="flex items-center gap-2">
                   <input 
-                    type="email" 
-                    required 
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@company.com" 
-                    className="w-full pl-11 pr-4 py-3.5 bg-zinc-50/50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder:text-zinc-600" 
+                    type="text" 
+                    readOnly 
+                    value={myReferralLink} 
+                    className="w-full bg-white dark:bg-zinc-950 border border-blue-200 dark:border-blue-500/30 rounded-xl px-3 py-3 text-sm text-zinc-700 dark:text-zinc-300 font-mono focus:outline-none shadow-sm"
                   />
+                  <button 
+                    onClick={copyToClipboard}
+                    className={`px-5 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-2 shrink-0 shadow-sm ${copied ? 'bg-emerald-500 text-white border border-emerald-600' : 'bg-blue-600 text-white border border-blue-700 hover:bg-blue-700'}`}
+                  >
+                    {copied ? <CheckCircle2 size={16} /> : <Copy size={16} />}
+                    {copied ? 'Copied!' : 'Copy'}
+                  </button>
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-zinc-900 dark:text-white mb-3">I am a...</label>
-                <div className="grid grid-cols-2 gap-3">
-                  <label className="cursor-pointer">
-                    <input type="radio" name="role" value="hire" className="peer sr-only" checked={intent === 'hire'} onChange={() => setIntent('hire')} />
-                    <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 px-4 py-3.5 peer-checked:border-blue-600 dark:peer-checked:border-blue-500 peer-checked:bg-blue-50 dark:peer-checked:bg-blue-500/10 peer-checked:text-blue-700 dark:peer-checked:text-blue-400 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all flex items-center justify-center gap-2 bg-white dark:bg-zinc-900">
-                      Client <span className="text-xs font-normal opacity-70">(Hiring)</span>
-                    </div>
-                  </label>
-                  <label className="cursor-pointer">
-                    <input type="radio" name="role" value="list" className="peer sr-only" checked={intent === 'list'} onChange={() => setIntent('list')} />
-                    <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 px-4 py-3.5 peer-checked:border-blue-600 dark:peer-checked:border-blue-500 peer-checked:bg-blue-50 dark:peer-checked:bg-blue-500/10 peer-checked:text-blue-700 dark:peer-checked:text-blue-400 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all flex items-center justify-center gap-2 bg-white dark:bg-zinc-900">
-                      Creator <span className="text-xs font-normal opacity-70">(Building)</span>
-                    </div>
-                  </label>
-                </div>
-              </div>
-
-              <button 
-                type="submit" 
-                className="w-full bg-blue-600 text-white font-bold py-4 rounded-xl hover:bg-blue-700 transition-all shadow-sm flex justify-center items-center gap-2 mt-4"
-              >
-                Request Access <ArrowRight size={16} />
+              <button onClick={() => { setStatus('idle'); setEmail(''); }} className="text-xs font-bold text-zinc-400 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors">
+                &larr; Join with another email
               </button>
-            </form>
-          </>
-        )}
+            </motion.div>
+
+          ) : (
+
+            /* --- WAITLIST FORM --- */
+            <motion.div
+              key="form"
+              initial={{ opacity: 0, scale: 0.95, y: -10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+            >
+              <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-2 tracking-tight flex items-center gap-2">
+                <Rocket className="text-blue-600 dark:text-blue-400" size={24} /> Join the Waitlist
+              </h2>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-8 leading-relaxed">Be among the first to access the platform. Early members get priority access & perks.</p>
+              
+              <form onSubmit={handleJoinWaitlist} className="space-y-6">
+                <div>
+                  <label className="block text-xs font-bold text-zinc-900 dark:text-white mb-2">Work Email <span className="text-red-500">*</span></label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                      <Mail size={16} className="text-zinc-400 dark:text-zinc-500" />
+                    </div>
+                    <input 
+                      type="email" 
+                      required 
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="you@company.com" 
+                      className="w-full pl-11 pr-4 py-3.5 bg-zinc-50/50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder:text-zinc-600" 
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-zinc-900 dark:text-white mb-3">I am a...</label>
+                  <div className="grid grid-cols-2 gap-3">
+                    <label className="cursor-pointer">
+                      <input type="radio" name="role" value="hire" className="peer sr-only" checked={intent === 'hire'} onChange={() => setIntent('hire')} />
+                      <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 px-4 py-3.5 peer-checked:border-blue-600 dark:peer-checked:border-blue-500 peer-checked:bg-blue-50 dark:peer-checked:bg-blue-500/10 peer-checked:text-blue-700 dark:peer-checked:text-blue-400 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all flex items-center justify-center gap-2 bg-white dark:bg-zinc-900">
+                        Client <span className="text-xs font-normal opacity-70">(Hiring)</span>
+                      </div>
+                    </label>
+                    <label className="cursor-pointer">
+                      <input type="radio" name="role" value="list" className="peer sr-only" checked={intent === 'list'} onChange={() => setIntent('list')} />
+                      <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 px-4 py-3.5 peer-checked:border-blue-600 dark:peer-checked:border-blue-500 peer-checked:bg-blue-50 dark:peer-checked:bg-blue-500/10 peer-checked:text-blue-700 dark:peer-checked:text-blue-400 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all flex items-center justify-center gap-2 bg-white dark:bg-zinc-900">
+                        Creator <span className="text-xs font-normal opacity-70">(Building)</span>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                <button 
+                  type="submit" 
+                  className="w-full bg-blue-600 text-white font-bold py-4 rounded-xl hover:bg-blue-700 transition-all shadow-sm flex justify-center items-center gap-2 mt-4"
+                >
+                  Request Access <ArrowRight size={16} />
+                </button>
+              </form>
+            </motion.div>
+
+          )}
+        </AnimatePresence>
       </div>
 
       {/* RIGHT: Elegant Tiered Perks */}
