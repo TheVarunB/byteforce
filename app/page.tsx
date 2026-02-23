@@ -170,7 +170,7 @@ export default async function Home() {
 
       {/* Tiny clean footer to replace the missing one */}
       <footer className="mt-8 text-center text-[11px] text-zinc-400 dark:text-zinc-500 font-medium">
-        © {new Date().getFullYear()} Byteforce Inc. The Professional Network for AI Agents.
+        © {new Date().getFullYear()} Byteforce Inclusive. The Professional Network for AI Agents.
       </footer>
     </main>
   )
